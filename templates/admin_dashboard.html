@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "_admin_nav.html" %}
+<h1>Dashboard</h1>
+<div class="stats">
+  <div><span class="muted">Revenue</span><strong>&#8377;{{ '%.2f'|format(stats.revenue) }}</strong></div>
+  <div><span class="muted">Orders</span><strong>{{ stats.orders }}</strong></div>
+  <div><span class="muted">Customers</span><strong>{{ stats.customers }}</strong></div>
+  <div><span class="muted">Products</span><strong>{{ stats.products }}</strong></div>
+</div>
+
+{% if forecast is not none %}
+<p class="note">Forecast for next month: <strong>&#8377;{{ '%.0f'|format(forecast) }}</strong> (linear trend on past monthly revenue).</p>
+{% endif %}
+
+{% if charts %}
+<div class="charts">
+  {% for key in ['monthly','top','category','status'] %}
+    {% if charts[key] %}<img src="data:image/png;base64,{{ charts[key] }}" alt="{{ key }} chart">{% endif %}
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">No orders yet, so there is nothing to chart. Run <code>python seed_data.py</code> to add sample orders.</p>
+{% endif %}
+
+<h2>Low stock</h2>
+{% if low_stock %}
+<ul>{% for p in low_stock %}<li><a href="{{ url_for('admin_edit_product', pid=p.id) }}">{{ p.name }}</a> &mdash; {{ p.stock }} left</li>{% endfor %}</ul>
+{% else %}<p class="muted">All products have 5 or more units in stock.</p>{% endif %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Shop</h1>
+<form class="filters" method="get">
+  <input type="text" name="q" placeholder="Search products" value="{{ q }}">
+  <select name="category">
+    <option value="">All categories</option>
+    {% for c in categories %}<option value="{{ c.id }}" {{ 'selected' if cat|string == c.id|string }}>{{ c.name }}</option>{% endfor %}
+  </select>
+  <input type="number" name="min_price" placeholder="Min price" value="{{ min_p }}" min="0">
+  <input type="number" name="max_price" placeholder="Max price" value="{{ max_p }}" min="0">
+  <select name="sort">
+    <option value="new" {{ 'selected' if sort=='new' }}>Newest</option>
+    <option value="price_low" {{ 'selected' if sort=='price_low' }}>Price: low to high</option>
+    <option value="price_high" {{ 'selected' if sort=='price_high' }}>Price: high to low</option>
+    <option value="rating" {{ 'selected' if sort=='rating' }}>Top rated</option>
+  </select>
+  <button class="btn" type="submit">Apply</button>
+</form>
+
+{% if products %}
+  <div class="grid">{% for p in products %}{% include "_product_card.html" %}{% endfor %}</div>
+{% else %}
+  <p class="empty">No products match these filters. Try clearing the search or price range.</p>
+{% endif %}
+{% endblock %}

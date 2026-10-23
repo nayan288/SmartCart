@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Checkout</h1>
+<div class="two-col">
+  <form method="post" class="form">
+    <label>Delivery address <textarea name="address" rows="4" required></textarea></label>
+    <label>Payment method
+      <select name="payment">
+        <option value="COD">Cash on delivery</option>
+        <option value="Card">Card (demo, no real payment)</option>
+        <option value="UPI">UPI (demo, no real payment)</option>
+      </select>
+    </label>
+    <label>Coupon code (try SAVE10) <input type="text" name="coupon"></label>
+    <button class="btn" type="submit">Place order</button>
+  </form>
+  <div class="summary">
+    <h3>Order summary</h3>
+    {% for i in items %}<p>{{ i.name }} &times; {{ i.quantity }} <span class="right">&#8377;{{ '%.2f'|format(i.price * i.quantity) }}</span></p>{% endfor %}
+    <p class="total">Subtotal: &#8377;{{ '%.2f'|format(subtotal) }}</p>
+  </div>
+</div>
+{% endblock %}

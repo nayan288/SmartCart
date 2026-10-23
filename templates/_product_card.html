@@ -1,0 +1,18 @@
+<article class="card">
+  <a href="{{ url_for('product', pid=p.id) }}" class="card-img">
+    {% if p.image %}<img src="{{ url_for('static', filename='images/' + p.image) }}" alt="{{ p.name }}">
+    {% else %}<div class="noimg">{{ p.name[:1] }}</div>{% endif %}
+  </a>
+  <div class="card-body">
+    <h3><a href="{{ url_for('product', pid=p.id) }}">{{ p.name }}</a></h3>
+    <p class="muted">{{ p.category or 'General' }}</p>
+    <p class="price">&#8377;{{ '%.2f'|format(p.price) }}</p>
+    {% if p.stock > 0 %}
+      <form method="post" action="{{ url_for('add_to_cart', pid=p.id) }}">
+        <button class="btn" type="submit">Add to cart</button>
+      </form>
+    {% else %}
+      <p class="out">Out of stock</p>
+    {% endif %}
+  </div>
+</article>

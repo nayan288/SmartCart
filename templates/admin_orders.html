@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "_admin_nav.html" %}
+<h1>Orders</h1>
+<table class="table">
+  <tr><th>Order</th><th>Customer</th><th>Date</th><th>Total</th><th>Payment</th><th>Status</th></tr>
+  {% for o in orders %}
+  <tr>
+    <td>#{{ o.id }}</td><td>{{ o.customer }}</td><td>{{ o.created_at.strftime('%d %b %Y') }}</td>
+    <td>&#8377;{{ '%.2f'|format(o.total) }}</td><td>{{ o.payment_method }}</td>
+    <td>
+      <form method="post" action="{{ url_for('admin_update_order', oid=o.id) }}" class="inline">
+        <select name="status">
+          {% for s in ['Placed','Packed','Shipped','Delivered','Cancelled'] %}<option {{ 'selected' if o.status == s }}>{{ s }}</option>{% endfor %}
+        </select>
+        <button class="btn btn-small btn-ghost" type="submit">Save</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

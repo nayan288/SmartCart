@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Your cart</h1>
+{% if items %}
+<table class="table">
+  <tr><th>Product</th><th>Price</th><th>Quantity</th><th>Subtotal</th><th></th></tr>
+  {% for i in items %}
+  <tr>
+    <td><a href="{{ url_for('product', pid=i.product_id) }}">{{ i.name }}</a></td>
+    <td>&#8377;{{ '%.2f'|format(i.price) }}</td>
+    <td>
+      <form method="post" action="{{ url_for('update_cart', cid=i.id) }}" class="inline">
+        <input type="number" name="quantity" value="{{ i.quantity }}" min="0" max="{{ i.stock }}">
+        <button class="btn btn-small btn-ghost" type="submit">Update</button>
+      </form>
+    </td>
+    <td>&#8377;{{ '%.2f'|format(i.price * i.quantity) }}</td>
+    <td><form method="post" action="{{ url_for('remove_from_cart', cid=i.id) }}"><button class="link-danger" type="submit">Remove</button></form></td>
+  </tr>
+  {% endfor %}
+</table>
+<p class="total">Total: &#8377;{{ '%.2f'|format(total) }}</p>
+<a class="btn" href="{{ url_for('checkout') }}">Go to checkout</a>
+{% else %}
+<p class="empty">Your cart is empty. <a href="{{ url_for('index') }}">Browse products</a></p>
+{% endif %}
+{% endblock %}

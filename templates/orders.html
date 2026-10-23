@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>My orders</h1>
+{% for o in orders %}
+<section class="order">
+  <div class="order-head">
+    <strong>Order #{{ o.id }}</strong>
+    <span class="status s-{{ o.status|lower }}">{{ o.status }}</span>
+    <span class="muted">{{ o.created_at.strftime('%d %b %Y') }}</span>
+    <span class="right">&#8377;{{ '%.2f'|format(o.total) }}</span>
+  </div>
+  <ul>{% for i in o["items"] %}<li>{{ i.name }} &times; {{ i.quantity }}</li>{% endfor %}</ul>
+  {% if o.status == 'Placed' %}
+  <form method="post" action="{{ url_for('cancel_order', oid=o.id) }}"><button class="link-danger" type="submit">Cancel order</button></form>
+  {% endif %}
+</section>
+{% else %}
+<p class="empty">You have not placed any orders yet. <a href="{{ url_for('index') }}">Start shopping</a></p>
+{% endfor %}
+{% endblock %}

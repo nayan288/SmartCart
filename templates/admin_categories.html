@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "_admin_nav.html" %}
+<h1>Categories</h1>
+<form method="post" class="inline">
+  <input type="text" name="name" placeholder="New category name" required>
+  <button class="btn" type="submit">Add category</button>
+</form>
+<ul>{% for c in categories %}<li>{{ c.name }}</li>{% endfor %}</ul>
+{% endblock %}

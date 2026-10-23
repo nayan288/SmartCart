@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ p.name }} - SmartCart{% endblock %}
+{% block content %}
+<section class="detail">
+  <div class="detail-img">
+    {% if p.image %}<img src="{{ url_for('static', filename='images/' + p.image) }}" alt="{{ p.name }}">
+    {% else %}<div class="noimg big">{{ p.name[:1] }}</div>{% endif %}
+  </div>
+  <div>
+    <p class="muted">{{ p.category or 'General' }}</p>
+    <h1>{{ p.name }}</h1>
+    <p class="muted">{% if avg %}Rated {{ avg }} / 5 from {{ reviews|length }} review{{ 's' if reviews|length != 1 }}{% else %}No reviews yet{% endif %}</p>
+    <p class="price large">&#8377;{{ '%.2f'|format(p.price) }}</p>
+    <p>{{ p.description }}</p>
+    {% if p.stock > 0 %}
+      <p class="muted">{{ p.stock }} in stock</p>
+      <form method="post" action="{{ url_for('add_to_cart', pid=p.id) }}" class="inline">
+        <input type="number" name="quantity" value="1" min="1" max="{{ p.stock }}">
+        <button class="btn" type="submit">Add to cart</button>
+      </form>
+    {% else %}<p class="out">Out of stock</p>{% endif %}
+  </div>
+</section>
+
+{% if recs %}
+<h2>Customers also bought</h2>
+<div class="grid">{% for p in recs %}{% include "_product_card.html" %}{% endfor %}</div>
+{% endif %}
+
+<h2>Reviews</h2>
+{% for r in reviews %}
+  <div class="review"><strong>{{ r.name }}</strong> &middot; {{ r.rating }}/5
+    <p>{{ r.comment }}</p></div>
+{% else %}
+  <p class="empty">Be the first to review this product.</p>
+{% endfor %}
+
+{% if session.user_id %}
+<form method="post" class="form narrow">
+  <h3>Write a review</h3>
+  <label>Rating
+    <select name="rating">{% for i in [5,4,3,2,1] %}<option value="{{ i }}">{{ i }}</option>{% endfor %}</select>
+  </label>
+  <label>Comment <textarea name="comment" rows="3"></textarea></label>
+  <button class="btn" type="submit">Post review</button>
+</form>
+{% endif %}
+{% endblock %}
