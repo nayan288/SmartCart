@@ -15,7 +15,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
 from db import get_db
-from recommender import recommend_for_product
+from ml.recommender import recommend_for_product
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "change-this-secret-key")
